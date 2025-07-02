@@ -1,6 +1,6 @@
 # chunker.py
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from app.core.config import settings
+from core.config import settings
 
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=settings.CHUNK_SIZE,
