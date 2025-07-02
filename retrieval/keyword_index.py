@@ -4,7 +4,7 @@ Keyword search piggybacks on Weaviate's BM25,
 so we only need a small helper to query it.
 """
 from langchain_core.documents import Document
-from app.core.config import settings
+from core.config import settings
 from .vector_store import _client
 
 def bm25_search(query: str, k: int = 10) -> list[Document]:

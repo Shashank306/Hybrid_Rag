@@ -4,11 +4,15 @@ Weaviate vector store initialisation & accessors.
 Uses LangChain's Weaviate wrapper + HuggingFaceEmbeddings
 so no paid APIs are required.
 """
+
 import functools
 import weaviate
 from langchain_community.vectorstores import Weaviate
 from langchain_huggingface import HuggingFaceEmbeddings
-from app.core.config import settings
+from core.config import settings
+
+def log_error(msg):
+    print(f"[ERROR] {msg}")
 
 @functools.lru_cache
 def _embeddings() -> HuggingFaceEmbeddings:
@@ -26,7 +30,7 @@ def _embeddings() -> HuggingFaceEmbeddings:
             }
         )
     except Exception as e:
-        error(f"Failed to load embedding model: {e}")
+        log_error(f"Failed to load embedding model: {e}")
         raise
 
 @functools.lru_cache
@@ -40,7 +44,7 @@ def _client() -> weaviate.Client:
         )
         return client
     except Exception as e:
-        error(f"Failed to connect to Weaviate: {e}")
+        log_error(f"Failed to connect to Weaviate: {e}")
         raise
 
 @functools.lru_cache
@@ -63,7 +67,7 @@ def get_vector_store() -> Weaviate:
                 "vectorIndexConfig": {"distance": "cosine"}
             })
     except Exception as schema_error:
-        error(f"Schema creation failed: {schema_error}")
+        log_error(f"Schema creation failed: {schema_error}")
         pass
     embeddings = _embeddings()
     return Weaviate(
